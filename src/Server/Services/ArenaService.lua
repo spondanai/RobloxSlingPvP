@@ -91,6 +91,14 @@ end
 
 -- Client RPC: player signals they finished building and are ready to fight
 function ArenaService.Client:ReadyUp(player)
+	-- Server-side guard: reject invalid builds regardless of what the client claims
+	local ws = getWorkshopService()
+	local validation = ws:ValidateSession(player)
+	if not validation or not validation.ok then
+		local reason = validation and validation.errors and validation.errors[1] or "invalid build"
+		return false, reason
+	end
+
 	for key, pending in pairs(pendingMatches) do
 		if pending.players.A == player or pending.players.B == player then
 			pending.ready[player] = true
@@ -273,8 +281,17 @@ function ArenaService.Client:FireSling(player, ammoName, hitCol, hitRow, hitTeam
 		end
 	end
 
-	-- Fire hit signal to both
-	local hitPayload = { col = hitCol, row = hitRow, team = hitTeam, ammoName = ammoName, results = results }
+	-- Fire hit signal to both — promote primary-hit fields so HandleHit can read them directly
+	local primary = results[1]
+	local hitPayload = {
+		col      = hitCol,
+		row      = hitRow,
+		team     = hitTeam,
+		ammoName = ammoName,
+		isCore   = primary and primary.isCore   or false,
+		destroyed= primary and primary.destroyed or false,
+		results  = results,
+	}
 	self.Server.Client.OnHit:Fire(match.players.A, hitPayload)
 	self.Server.Client.OnHit:Fire(match.players.B, hitPayload)
 

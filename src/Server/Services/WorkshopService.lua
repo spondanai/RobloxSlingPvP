@@ -302,8 +302,8 @@ function WorkshopService.Client:GetSession(player)
 	return WorkshopService:GetSession(player)
 end
 
--- Server-side validate current build (called from client before saving)
-function WorkshopService.Client:Validate(player)
+-- Public server method — safe to call from other services (e.g. ArenaService:ReadyUp)
+function WorkshopService:ValidateSession(player)
 	local session = getSession(player)
 	if not session.corePos then
 		return { ok = false, errors = { "core not set" } }
@@ -314,6 +314,11 @@ function WorkshopService.Client:Validate(player)
 		core    = session.corePos,
 	}
 	return BlueprintValidator.validate(blueprint, VALIDATOR_CONFIG)
+end
+
+-- Client RPC wrapper
+function WorkshopService.Client:Validate(player)
+	return self.Server:ValidateSession(player)
 end
 
 function WorkshopService.Client:ClearSession(player)
