@@ -1,0 +1,23 @@
+[package]
+name = "slingsiegearchitects/game"
+version = "0.1.0"
+registry = "https://github.com/UpliftGames/wally-index"
+realm = "shared"
+
+[place]
+shared-packages = "game.ReplicatedStorage.Packages"
+server-packages = "game.ServerStorage.ServerPackages"
+
+[dependencies]
+Knit    = "sleitnick/knit@1.7.0"
+Janitor = "howmanysmall/janitor@1.18.3"
+Fusion  = "elttob/fusion@0.3.0"
+Signal  = "sleitnick/signal@2.0.3"
+
+[server-dependencies]
+ProfileService = "howmanysmall/profile-service@1.0.2"
+
+# FastCast is NOT on Wally — install manually:
+# 1. Download from https://github.com/EtiTheSpirit/RaycastHitboxV4 (or FastCastRedux)
+#    https://github.com/EtiTheSpirit/FastCastRedux/releases
+# 2. Place FastCastRedux.lua into src/Shared/Modules/FastCastRedux.lua

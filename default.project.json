@@ -1,0 +1,53 @@
+{
+  "name": "RobloxSlingPvP",
+  "tree": {
+    "$className": "DataModel",
+
+    "ServerScriptService": {
+      "$className": "ServerScriptService",
+      "Server": { "$path": "src/Server" }
+    },
+
+    "StarterPlayer": {
+      "$className": "StarterPlayer",
+      "StarterPlayerScripts": {
+        "$className": "StarterPlayerScripts",
+        "Client": { "$path": "src/Client" }
+      }
+    },
+
+    "ReplicatedStorage": {
+      "$className": "ReplicatedStorage",
+      "Shared": { "$path": "src/Shared" },
+      "Packages": { "$path": "Packages" },
+
+      "RemoteEvents": {
+        "$className": "Folder",
+        "Blueprint_Save":      { "$className": "RemoteEvent" },
+        "Blueprint_Load":      { "$className": "RemoteEvent" },
+        "Blueprint_Delete":    { "$className": "RemoteEvent" },
+        "Workshop_PlaceBlock": { "$className": "RemoteEvent" },
+        "Workshop_RemoveBlock":{ "$className": "RemoteEvent" },
+        "Workshop_Submit":     { "$className": "RemoteEvent" },
+        "Arena_FireSling":     { "$className": "RemoteEvent" },
+        "Arena_EndTurn":       { "$className": "RemoteEvent" },
+        "Arena_Hit":           { "$className": "RemoteEvent" },
+        "Arena_Collapse":      { "$className": "RemoteEvent" },
+        "Game_StateChanged":   { "$className": "RemoteEvent" },
+        "Game_TurnChanged":    { "$className": "RemoteEvent" },
+        "Game_ResourceUpdate": { "$className": "RemoteEvent" }
+      },
+
+      "RemoteFunctions": {
+        "$className": "Folder",
+        "Blueprint_GetAll":  { "$className": "RemoteFunction" },
+        "Workshop_Validate": { "$className": "RemoteFunction" }
+      }
+    },
+
+    "ServerStorage": {
+      "$className": "ServerStorage",
+      "ServerPackages": { "$path": "ServerPackages" }
+    }
+  }
+}

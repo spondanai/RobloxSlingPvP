@@ -1,0 +1,13 @@
+# Rojo build output
+*.rbxl
+*.rbxlx
+
+# Wally packages (installed locally, not committed)
+Packages/
+ServerPackages/
+
+# OS / editor
+.DS_Store
+*.swp
+.idea/
+.vscode/
