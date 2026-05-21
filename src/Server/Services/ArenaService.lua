@@ -171,8 +171,9 @@ function ArenaService:HandlePlayerLeave(player)
 	-- Clean up any pending match this player was part of
 	for key, pending in pairs(pendingMatches) do
 		if pending.players.A == player or pending.players.B == player then
-			local opponent = (pending.players.A == player) and pending.players.B or pending.players.A
-			self.Client.OnMatchOver:Fire(opponent, "PlayerLeft", nil)
+			local opponent   = (pending.players.A == player) and pending.players.B or pending.players.A
+			local winnerTeam = (pending.players.A == player) and "B" or "A"
+			self.Client.OnMatchOver:Fire(opponent, "PlayerLeft", winnerTeam)
 			pendingMatches[key] = nil
 			break
 		end

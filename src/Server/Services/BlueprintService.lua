@@ -121,7 +121,8 @@ function BlueprintService.Client:Save(player, rawBlocks, corePos, name)
         return false, result.errors
     end
 
-    encoded.name = tostring(name or ""):sub(1, 32)
+    local futureIndex = #profile.Data.blueprints + 1
+    encoded.name = (type(name) == "string" and name ~= "") and name:sub(1, 32) or ("Blueprint " .. futureIndex)
     table.insert(profile.Data.blueprints, encoded)
 
     local index = #profile.Data.blueprints

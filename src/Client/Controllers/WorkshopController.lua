@@ -79,33 +79,35 @@ function WorkshopController:KnitStart()
 	end))
 
 	-- Workshop Service Signals
-	WorkshopService.OnBlockPlaced:Connect(function(col, row, typeName)
+	self._janitor:Add(WorkshopService.OnBlockPlaced:Connect(function(col, row, typeName, newCap)
 		self:RenderBlock(col, row, typeName)
-	end)
+		if newCap then HudController.State.BuildCap:set(newCap) end
+	end))
 
-	WorkshopService.OnBlockRemoved:Connect(function(col, row)
+	self._janitor:Add(WorkshopService.OnBlockRemoved:Connect(function(col, row, newCap)
 		self:RemoveBlockRender(col, row)
-	end)
+		if newCap then HudController.State.BuildCap:set(newCap) end
+	end))
 
-	WorkshopService.OnCoreSet:Connect(function(col, row)
+	self._janitor:Add(WorkshopService.OnCoreSet:Connect(function(col, row)
 		self:RenderCore(col, row)
-	end)
+	end))
 
-	WorkshopService.OnSessionCleared:Connect(function()
+	self._janitor:Add(WorkshopService.OnSessionCleared:Connect(function()
 		self:ClearAllRenders()
 		local myTeam = peek(HudController.State.MyTeam)
 		if myTeam and peek(HudController.State.Phase) == "Workshop" then
 			self:showGrid(myTeam)
 		end
-	end)
+	end))
 
-	WorkshopService.OnCollapse:Connect(function(positions, newCap)
+	self._janitor:Add(WorkshopService.OnCollapse:Connect(function(positions, newCap)
 		self:AnimateCollapse(positions, newCap)
-	end)
+	end))
 
-	WorkshopService.OnFloatWarning:Connect(function(positions)
+	self._janitor:Add(WorkshopService.OnFloatWarning:Connect(function(positions)
 		self:ShowFloatWarning(positions)
-	end)
+	end))
 end
 
 function WorkshopController:EnterWorkshop()

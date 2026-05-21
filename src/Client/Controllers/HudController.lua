@@ -52,14 +52,18 @@ local function buildHud(scope, screenGui)
 
     -- Helper: create a rounded frame
     local function Panel(s, props)
-        return s:New "Frame" (Fusion.mergeTable(props, {
-            BackgroundColor3 = C.panel,
-            BorderSizePixel  = 0,
-            [Children] = Fusion.mergeTable(props[Children] or {}, {
-                s:New "UICorner" { CornerRadius = UDim.new(0, 10) },
-                s:New "UIStroke" { Color = C.border, Thickness = 1 },
-            }),
-        }))
+        local callerChildren = props[Children] or {}
+        local mergedChildren = {
+            s:New "UICorner" { CornerRadius = UDim.new(0, 10) },
+            s:New "UIStroke" { Color = C.border, Thickness = 1 },
+        }
+        for _, v in ipairs(callerChildren) do
+            mergedChildren[#mergedChildren + 1] = v
+        end
+        local merged = { BackgroundColor3 = C.panel, BorderSizePixel = 0 }
+        for k, v in pairs(props) do merged[k] = v end
+        merged[Children] = mergedChildren
+        return s:New "Frame" (merged)
     end
 
     -- ── QUEUE / WAITING screen ─────────────────────────────────────────────
@@ -246,7 +250,12 @@ local function buildHud(scope, screenGui)
                 validateColor:set(C.green)
                 validateMsg:set("✓ บันทึกแล้ว รอคู่ต่อสู้...")
                 -- Stay visible until phase changes; ReadyUp triggers match start when both ready
-                Knit.GetService("ArenaService"):ReadyUp()
+                local readyOk, readyErr = Knit.GetService("ArenaService"):ReadyUp()
+                if not readyOk then
+                    validateColor:set(C.red)
+                    validateMsg:set("❌ " .. tostring(readyErr or "ส่งไม่ได้"))
+                    task.delay(3, function() validateMsg:set("") end)
+                end
             else
                 validateColor:set(C.red)
                 validateMsg:set("❌ " .. tostring(idxOrErr))
